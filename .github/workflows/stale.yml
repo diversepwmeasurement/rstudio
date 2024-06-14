@@ -1,31 +1,31 @@
-name: 'Close stale issues'
-on:
-  schedule:
-    - cron: '30 1 * * *'
-
-permissions:
-  contents: read
-
 jobs:
   stale:
     permissions:
-      issues: write  # for actions/stale to close stale issues
-      pull-requests: write  # for actions/stale to close stale PRs
-    runs-on: ubuntu-latest
+      issues: write
+      pull-requests: write
+    runs-on: self-hosted
     steps:
-      - uses: actions/stale@v3
-        with:
-          days-before-stale: 180
-          days-before-close: 14
-          stale-issue-message: >
-            This issue has been automatically marked as stale because it has not had
-            recent activity. It will be closed if no further activity occurs, per 
-            https://github.com/rstudio/rstudio/wiki/Issue-Grooming. Thank you
-            for your contributions.
-            
-          close-issue-message: >
-            This issue has been automatically closed due to inactivity.
-            
-          stale-issue-label: 'stale'
-          exempt-issue-labels: 'automation,backlog,builds,codetree-epic,developer,documentation,high,in progress,security,test,triage,tech debt'
-          exempt-all-milestones: true
+    - continue-on-error: true
+      uses: actions/stale@v3
+      with:
+        close-issue-message: 'This issue has been automatically closed due to inactivity.
+
+          '
+        days-before-close: 14
+        days-before-stale: 180
+        exempt-all-milestones: true
+        exempt-issue-labels: automation,backlog,builds,codetree-epic,developer,documentation,high,in
+          progress,security,test,triage,tech debt
+        stale-issue-label: stale
+        stale-issue-message: 'This issue has been automatically marked as stale because
+          it has not had recent activity. It will be closed if no further activity
+          occurs, per  https://github.com/rstudio/rstudio/wiki/Issue-Grooming. Thank
+          you for your contributions.
+
+          '
+name: Close stale issues
+on:
+  repository_dispatch:
+    types: trigger-ga___stale.yml
+permissions:
+  contents: read
